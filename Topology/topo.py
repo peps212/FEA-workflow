@@ -65,7 +65,7 @@ class LinearElasticity(Problem):
 
     def get_surface_maps(self):
         def surface_map(u, x):
-            return np.array([0., 100.])
+            return np.array([0., 100., 0.])
         return [surface_map]
 
     def set_params(self, params):
@@ -126,7 +126,9 @@ def fixed_location(point):
     return np.isclose(point[0], 0., atol=1e-5)
     
 def load_location(point):
-    return np.logical_and(np.isclose(point[0], Lx, atol=1e-5), np.isclose(point[1], 0., atol=0.1*Ly + 1e-5))
+    #return np.logical_and(np.isclose(point[0], Lx, atol=1e-5), np.isclose(point[1], 0., atol=0.1*Ly + 1e-5))
+    return np.isclose(point[0], Lx, atol=1e-5)
+
 
 def dirichlet_val(point):
     return 0.
