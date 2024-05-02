@@ -1,31 +1,34 @@
 import cadquery as cq
 import gmsh
 
-
-step_file = "wing.step"
-
-
+step_file = "tavola3.step"
 
 def create_mesh(step_file, mesh_file='model.msh'):
     gmsh.initialize()
-    gmsh.option.setNumber("Mesh.MshFileVersion", 2.2)  
+    gmsh.option.setNumber("Mesh.MshFileVersion", 2.2)
 
     # Load STEP file
     gmsh.model.occ.importShapes(step_file)
     gmsh.model.occ.synchronize()
 
-    # Define meshing parameters
-    #gmsh.option.setNumber("Mesh.Algorithm", 6)  # Specify mesh algorithm
-    #gmsh.option.setNumber("Mesh.RecombineAll", 1)
-    gmsh.model.mesh.setOrder(1)
-    gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 1)
-    gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 1)
+    # Fine-tuning mesh parameters
+    #gmsh.model.mesh.setOrder(1)
+    gmsh.option.setNumber("Mesh.Algorithm", 6)  # Delaunay meshing
+    #gmsh.option.setNumber("Mesh.DrawSkinOnly", 1)
+    #gmsh.option.setNumber("Mesh.Smoothing", 100)
+    #gmsh.option.setNumber("Mesh.Optimize", 1)
+    gmsh.option.setNumber("Mesh.MeshSizeMin", 0.1)  # Smaller value for finer mesh
+    gmsh.option.setNumber("Mesh.MeshSizeMax", 0.1)  # Adjusted maximum length
 
+   
     # Generate mesh
-    gmsh.model.mesh.generate(3)  # 3 for 3D meshing
+    gmsh.model.mesh.generate(3)  # 2 for surface meshing, 3 for volume meshing if needed
+
+    # Optionally refine mesh
+    #gmsh.model.mesh.refine()  # Uncomment if additional refinement is needed after initial generation
 
     # Save mesh
-    gmsh.write(mesh_file)
+    gmsh.write(mesh_file)   
     gmsh.finalize()
 
 # Create mesh from STEP file
